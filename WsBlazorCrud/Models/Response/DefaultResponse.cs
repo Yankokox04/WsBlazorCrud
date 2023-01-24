@@ -4,7 +4,7 @@
         public int Success { get; set; }
         public int Failure { get; set; }
         public string Message { get; set; }
-        public object Data { get; set; }
+        public List<Beer> Data { get; set; }
 
         public DefaultResponse() {
             this.Success = 0;

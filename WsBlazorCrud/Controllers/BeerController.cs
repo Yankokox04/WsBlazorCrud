@@ -10,7 +10,7 @@ namespace WsBlazorCrud.Controllers {
     public class BeerController : Controller {
         [HttpGet]
         public IActionResult Get() {
-            DefaultResponse response = new DefaultResponse();
+            var response = new DefaultResponse<List<Beer>>();
 
             try {
                 using (BlazorCrudContext db = new BlazorCrudContext()) {
@@ -25,9 +25,27 @@ namespace WsBlazorCrud.Controllers {
             }
                 return Ok(response);
         }
+
+        [HttpGet("{Id}")]
+        public IActionResult Get(int Id) {
+            var response = new DefaultResponse<Beer>();
+
+            try {
+                using (BlazorCrudContext db = new BlazorCrudContext()) {
+                    var beer = db.Beers.Find(Id);
+                    response.Success = 1;
+                    response.Data = beer;
+                }
+
+            } catch (Exception ex) {
+
+                response.Message = ex.Message;
+            }
+                return Ok(response);
+        }
         [HttpPost]
         public IActionResult Create(BeerRequest model) {
-            DefaultResponse response = new DefaultResponse();
+            var response = new DefaultResponse<object>();
 
             try {
                 using (BlazorCrudContext db = new BlazorCrudContext()) {
@@ -37,8 +55,6 @@ namespace WsBlazorCrud.Controllers {
                     db.Beers.Add(beer);
                     db.SaveChanges();
                     response.Success = 1;
-                        
-                        
                 }
 
             } catch (Exception ex) {
@@ -50,7 +66,7 @@ namespace WsBlazorCrud.Controllers {
 
         [HttpPut]
         public IActionResult Edit(BeerRequest model) {
-            DefaultResponse response = new DefaultResponse();
+            var response = new DefaultResponse<Beer>();
 
             try {
                 using (BlazorCrudContext db = new BlazorCrudContext()) {
@@ -60,6 +76,7 @@ namespace WsBlazorCrud.Controllers {
                     db.Entry(beer).State = EntityState.Modified;
                     db.SaveChanges();
                     response.Success = 1;
+                    response.Data = beer;
                 }
 
             } catch (Exception ex) {
@@ -71,7 +88,7 @@ namespace WsBlazorCrud.Controllers {
 
         [HttpDelete("{Id}")]
         public IActionResult Delete(int Id) {
-            DefaultResponse response = new DefaultResponse();
+            var response = new DefaultResponse<object>();
 
             try {
                 using (BlazorCrudContext db = new BlazorCrudContext()) {

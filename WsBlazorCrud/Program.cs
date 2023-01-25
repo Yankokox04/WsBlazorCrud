@@ -1,15 +1,17 @@
 
+using Microsoft.Net.Http.Headers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddCors( Op => {
-    Op.AddPolicy(name:"Cors",
-                    builder => {
-                        builder.WithOrigins("*");
-                    });
+//builder.Services.AddCors( Op => {
+//    Op.AddPolicy(name:"Cors",
+//                    builder => {
+//                        builder.WithOrigins("*");
+//                    });
 
-});
+//});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,8 +25,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseCors("Cors");
+app.UseCors(policy =>
+    policy.WithOrigins("*")
+    .AllowAnyMethod()
+    .WithHeaders(HeaderNames.ContentType));
+//app.UseCors("Cors");
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
